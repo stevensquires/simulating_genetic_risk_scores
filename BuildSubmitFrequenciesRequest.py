@@ -42,7 +42,7 @@ def middle(listSNPs):
 def end(popWanted):
     return '&pop='+popWanted+'&r2_d=r2&window=500000&genome_build=grch37&token=b143e06c160a\' > \''
 def buildRequest(list1,chrSNPDict):
-    for popWanted in popsWanted:
+    for popWanted in list1:
         with open('SubmitRequests/submitFrequencyRequest'+grsName+popWanted+'.sh', 'w') as f:
             f.write('#!/bin/bash\n')
             for chrNum,listSNPs in chrSNPDict.items():
