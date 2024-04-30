@@ -15,7 +15,7 @@ def pathOut(pop):
 def returnChrDict(grsFile):
     dict1={}
     for i,row in grsFile.iterrows():
-        chrNum=row['POSITION_DBSNP151'].split(':')[0]
+        chrNum=row['ChrPos'].split(':')[0]
         if chrNum in dict1:
             list1=dict1[chrNum]
             list1.append(row['RSID'])
@@ -41,30 +41,27 @@ def middle(listSNPs):
     return str1
 def end(popWanted):
     return '&pop='+popWanted+'&r2_d=r2&window=500000&genome_build=grch37&token=b143e06c160a\' > \''
+def buildRequest(list1,chrSNPDict):
+    for popWanted in popsWanted:
+        with open('SubmitRequests/submitFrequencyRequest'+grsName+popWanted+'.sh', 'w') as f:
+            f.write('#!/bin/bash\n')
+            for chrNum,listSNPs in chrSNPDict.items():
+                sentence=start()+middle(listSNPs)+end(popWanted)+pathOut(popWanted)+'chr'+str(chrNum)+'Frequencies.txt\'\n'
+                f.write(sentence)
 
-nameGRS='T1DGRS67_1000G_hg19_FinalFor1000GSimulation.xlsx'
+
+
+nameGRS='grsScores.xlsx'
 grsFile=pd.read_excel(path0()+nameGRS)
 chrSNPDict=returnChrDict(grsFile)
 
 grsName='GRS2'
-popsWanted=['AFR','SAS','AMR','EAS'] ## ,'EUR'
-
-for popWanted in popsWanted:
-    with open('SubmitRequests/submitFrequencyRequest'+grsName+popWanted+'.sh', 'w') as f:
-        f.write('#!/bin/bash\n')
-        for chrNum,listSNPs in chrSNPDict.items():
-            sentence=start()+middle(listSNPs)+end(popWanted)+pathOut(popWanted)+'chr'+str(chrNum)+'Frequencies.txt\'\n'
-            f.write(sentence)
-
-
+listSuperPops=['AFR','SAS','AMR','EAS','EUR'] ## 
 listPops=pd.read_csv(path1()+'listPopulations.csv')['Population'].tolist()
+buildRequest(listSuperPops,chrSNPDict)
+buildRequest(listPops,chrSNPDict)
 
-for popWanted in listPops:
-    with open('SubmitRequests/submitFrequencyRequest'+grsName+popWanted+'.sh', 'w') as f:
-        f.write('#!/bin/bash\n')
-        for chrNum,listSNPs in chrSNPDict.items():
-            sentence=start()+middle(listSNPs)+end(popWanted)+pathOut(popWanted)+'chr'+str(chrNum)+'Frequencies.txt\'\n'
-            f.write(sentence)
+#### if below is run then can run this all with one script
 
 with open('SubmitRequests/submitRequestAllPops.sh', 'w') as f:
     f.write('#!/bin/bash\n')
@@ -73,19 +70,6 @@ with open('SubmitRequests/submitRequestAllPops.sh', 'w') as f:
         f.write(sentence)
         sentence='bash '+path3()+'submitCorrelationRequestGRS2'+popWanted+'.sh\'\n'
         f.write(sentence)
-
-
-
-# import subprocess
-# # subprocess.run(['plink','--bfile',name0,'--extract',snpListNameHLA,'--make-bed','--out',
-# #                 path2()+'grs67SNPsHLA'])  
-# with open('SubmitRequests/submitRequestAllPops.py', 'w') as f:
-#     for popWanted in listPops:
-#         sentence='subprocess.run([bash '+path3()+'submitFrequencyRequestGRS2'+popWanted+'.sh\'\n'
-#         f.write(sentence)
-#         sentence='bash '+path3()+'submitCorrelationRequestGRS2'+popWanted+'.sh\'\n'
-#         f.write(sentence)
-
 
 
 
