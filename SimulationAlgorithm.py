@@ -44,23 +44,16 @@ def checkUpDate(scoresI,scoresList,corrsAll,i,norm0):
                 norm0=normTemp
     return norm0,scoresI
 
-def returnUpdatedScores(scoresList,size1,corrsAll,tolerance):
+def returnUpdatedScores(scoresList,size1,corrsAll,tolerance,iterationLimit):
     keepRunning=True
-    # tolerance=0.01
     listLen=len(scoresList)
-    # print('Length of list=',listLen)
     iter0=0
-    # print('correlations to match=',corrsAll)
     rand0=np.random.permutation(listLen)
     averageNums=[]
     for i in range(listLen):
-        averageNums.append(np.mean(scoresList[i]))
-    # print(averageNums)
-    
-    
+        averageNums.append(np.mean(scoresList[i]))   
     while keepRunning:
         for i0 in range(listLen): 
-            # print(listLen)
             i=rand0[i0]
             scoresI=scoresList[i] 
             norm0,normStore=returnNorm(scoresList,scoresI,i,corrsAll)
@@ -69,14 +62,9 @@ def returnUpdatedScores(scoresList,size1,corrsAll,tolerance):
             if norm0<tolerance:
                 keepRunning=False
                 success=True
-        # print(normStore)
+        rand0=np.random.permutation(listLen)
         iter0+=1
-        if iter0%200==0:
-            randInt,randomise=np.random.randint(listLen),np.random.permutation(size1)
-            scoresRand=scoresList[randInt][randomise]
-            scoresList[randInt]=scoresRand
-            # print(iter0)
-        if iter0==10000:
+        if iter0==iterationLimit:
             keepRunning=False
             success=False       
     return scoresList,success

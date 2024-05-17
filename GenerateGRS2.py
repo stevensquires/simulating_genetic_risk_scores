@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import pickle
 def basePath():
-    return '/slade/home/ss1453/Projects/Other/BackgroundT1DGRS/'
+    return ''
 def path0(dataType,grsType):
     return basePath()+'SimData/'+dataType+'/'+grsType+'/'
 def path1():
@@ -12,15 +12,12 @@ def path2(dataType,grsType,population):
 def path3():
     return basePath()+'Data/OtherData/'
 def pathOut():
-    return basePath()+'Outputs/Outputs2/'
+    return basePath()+'Outputs/'
 
 def returnTableScores1(dataType,grsType,population,simOrNot):
     tableSNPs=pd.read_csv(path0(dataType,grsType)+'SimArr'+simOrNot+population+'.csv',index_col=0)
     freqData=pd.read_csv(path2(dataType,grsType,population)+'tabFreqs'+grsType+population+'.csv',index_col=0)
-    if dataType=='LDlinkData':
-        scoresFile=pd.read_excel(path1()+'T1DGRS67_1000G_hg19_FinalFor1000GSimulation.xlsx').set_index('RSID')
-    elif dataType=='UKBBdata':
-        scoresFile=pd.read_excel(path1()+'T1DGRS67_1000G_hg19_FinalFor1000GSimulationUKBB.xlsx').set_index('RSID')
+    scoresFile=pd.read_excel(path1()+'grsScores.xlsx').set_index('RSID')
     arraySNPs2=np.zeros((tableSNPs.shape[0],tableSNPs.shape[1]),int)
     arrScores1=np.zeros((tableSNPs.shape[0],tableSNPs.shape[1]),float)
     snpNames,iter0=[],0
@@ -43,7 +40,7 @@ def returnTableScores1(dataType,grsType,population,simOrNot):
     return tableScores,tableSNPs2,scoresFile
 def returnDQscores(tableSNPs2,scoresFile):
     intScores=pd.read_csv(path1()+'T1D67_int_scores.txt',sep='\t')
-    ranking=pd.read_csv(path1()+'HLADQ_USAEuropean_Klitz.txt',sep='\t')
+    ranking=pd.read_csv(path1()+'rankingFile.txt',sep='\t')
     rank1=list(ranking['DQ'])
     listDQ,listDQsorted,dqScores=[],[],[]
     arrSNPs=tableSNPs2.values
@@ -70,6 +67,9 @@ def returnDQscores(tableSNPs2,scoresFile):
                 if row['ALLELE1']==temp2[0] and row['ALLELE2']==temp2[1]:
                     dqScore=row['BETA']
                     break
+                if row['ALLELE2']==temp2[0] and row['ALLELE1']==temp2[1]:
+                    dqScore=row['BETA']
+                    break
         dqScores.append(dqScore)
     return np.array(dqScores),listDQ,listDQsorted
     
@@ -88,32 +88,13 @@ def saveAllScores(dataType,grsType,population,corrOrNot):
     tableScores.to_csv(pathOut()+'ScoresPerSNP'+dataType+grsType+population+corrOrNot+'.csv')
     return tableFinalScores
 
+if __name__=='__main__':
+    corrOrNot=['Corr','NoCorr']##'NoCorr' ###
+    population,dataType,grsType='EUR','LDlinkData','GRS2'
+    tableEURnoCorr=tableFinalScores=saveAllScores(dataType,grsType,population,'NoCorr')
+    tableEURCorr=tableFinalScores=saveAllScores(dataType,grsType,population,'Corr')
 
-# popsWanted=['EUR','AFR','SAS','AMR','EAS'] ##,'EUR'
-# corrOrNot=['Corr']#,'NoCorr']##'NoCorr' ### 
-# for population in popsWanted:
-#     for corr in corrOrNot:
-#         dataType,grsType='LDlinkData','GRS2'
-#         tableFinalScores=saveAllScores(dataType,grsType,population,corr)
-        
-    
-# listPops=pd.read_csv(path3()+'listPopulations.csv')['Population'].tolist()
-# corrOrNot=['Corr']#,'Corr']###,'NoCorr']##'NoCorr' ### 
-# for population in listPops:
-#     for corr in corrOrNot:
-#         dataType,grsType='LDlinkData','GRS2'
-#         tableFinalScores=saveAllScores(dataType,grsType,population,corr)
-#     print(population)
-      
 
-    
-listPops=['T1D']#,'AFR','SAS','EAS','EUR'] 
-corrOrNot=['Corr']#,'Corr']###,'NoCorr']##'NoCorr' ### 
-for population in listPops:
-    for corr in corrOrNot:
-        dataType,grsType='UKBBdata','GRS2'
-        tableFinalScores=saveAllScores(dataType,grsType,population,corr)
-    print(population)
 
 
 

@@ -4,7 +4,7 @@ import numpy as np
 from scipy.stats import pearsonr
 
 def basePath():
-    return '/slade/home/ss1453/Projects/Other/BackgroundT1DGRS/'
+    return ''
 def path0():
     return basePath()+'Data/GRSinputFiles/'
 def path1():
@@ -13,13 +13,13 @@ def path2():
     return basePath()+'Data/LDlinkData/'
 def pathOut(grsName,popWanted):
     return basePath()+'Data/InputDataOther/1000G/'+grsName+'/'+popWanted+'/Tables/'
-def returnData1(grsName,popWanted):
-    name=path0()+'grd67SNPs'
+def returnData1(plinkName,popWanted,grsFileName,chrPosOrRSID):
+    name=path0()+plinkName
     G=pandas_plink.read_plink1_bin(name+'.bed',name+'.bim',name+'.fam',verbose=False)
     bimFile=pd.read_csv(name+'.bim',header=None,sep='\t').set_index(1)
     vals,snps,samples=G.values,list(G.snp.values),list(G.sample.values)
     popData=pd.read_csv(path1()+'1000GpopulationInfo.tsv',sep='\t',index_col=0)
-    grsScoreFile=pd.read_excel(path2()+'T1DGRS67_1000G_hg19_FinalFor1000GSimulation.xlsx').set_index('POSITION_DBSNP151')
+    grsScoreFile=pd.read_excel(path2()+grsFileName).set_index(chrPosOrRSID)
     listScores=list(grsScoreFile.index)
     indices=[]
     for i,sam1 in enumerate(samples):
@@ -27,7 +27,6 @@ def returnData1(grsName,popWanted):
         if row0['Superpopulation code']==popWanted:
             indices.append(i) 
     return bimFile,vals,snps,samples,listScores,indices,grsScoreFile
-
 def saveFrequencyTable(vals,indices,grsScoreFile,listScores,snps,bimFile,grsName,popWanted):
     tableFrequencies=pd.DataFrame(columns=['A1','A2','Freq1','Freq2'])
     arrayVals=vals[indices,:]
@@ -37,8 +36,6 @@ def saveFrequencyTable(vals,indices,grsScoreFile,listScores,snps,bimFile,grsName
         if snp0 in listScores:
             row0=grsScoreFile.loc[snp0]
             rsNum=row0['RSID']
-        elif snp0=='6:33071027':
-            rsNum='rs3129197'
         freqB=(np.sum(arrayVals[:,i])/(2*arrayVals.shape[0]))
         freqA=1-freqB
         bimRow=bimFile.loc[snp]
@@ -57,8 +54,6 @@ def saveCorrelationTable(vals,indices,snps,listScores,grsScoreFile,minCorr,grsNa
         if snp0 in listScores:
             row0=grsScoreFile.loc[snp0]
             rsNum=row0['RSID']
-        elif snp0=='6:33071027':
-            rsNum='rs3129197'
         tempList.append([chr1,rsNum])
     iter0=0
     for i in range(len(snps)-1):
@@ -76,14 +71,17 @@ def saveCorrelationTable(vals,indices,snps,listScores,grsScoreFile,minCorr,grsNa
     tableCorrelations.to_csv(pathOut(grsName,popWanted)+'tabCorrelations'+grsName+popWanted+'.csv')
     return tableCorrelations
 
-
+##### This code uses genotyped data from 1000G and calculates frequencies and correlations for superpopulations.
+##### The code can be adapted for other array data
 
 superPops=['AMR','AFR','EAS','EUR','SAS']
-grsName,popWanted='GRS2','AMR'
+grsName='GRS2' ### 
+plinkName='grs67' #### name of the plink array data
+chrPosOrRSID='ChrPos'
 for popWanted in superPops:
-    bimFile,vals,snps,samples,listScores,indices,grsScoreFile=returnData1(grsName,popWanted)
+    bimFile,vals,snps,samples,listScores,indices,grsScoreFile=returnData1(plinkName,grsName,popWanted,chrPosOrRSID)
     tableFreqs=saveFrequencyTable(vals,indices,grsScoreFile,listScores,snps,bimFile,grsName,popWanted)
-    minCorr=0.15
+    minCorr=0.05
     tableCorrelations=saveCorrelationTable(vals,indices,snps,listScores,grsScoreFile,minCorr,grsName,popWanted)
     
 

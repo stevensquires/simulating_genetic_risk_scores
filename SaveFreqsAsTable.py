@@ -3,7 +3,7 @@ import os
 from fnmatch import fnmatch
 
 def basePath():
-    return '/slade/home/ss1453/Projects/Other/BackgroundT1DGRS/'
+    return ''
 def path0(grsName,popWanted):
     return basePath()+'Data/LDlinkData/'+grsName+'/'+popWanted+'/Raw/'
 def path1():
@@ -31,16 +31,13 @@ def saveFreqTable(grsName,popWanted):
             tableFrequencies.loc[row['RS_Number']]=[a1,a2,freq1,freq2]
     tableFrequencies.to_csv(pathOut(grsName,popWanted)+'tabFreqs'+grsName+popWanted+'.csv')
     
+grsName='GRS2'
 
-
-popsWanted=['AFR','SAS','AMR','EAS']
+popsWanted=['EUR']#'AFR','SAS','AMR','EAS']
 for popWanted in popsWanted:
-    grsName='GRS2'
     saveFreqTable(grsName,popWanted)
-
 listPops=pd.read_csv(path1()+'listPopulations.csv')['Population'].tolist()
 for popWanted in listPops:
-    grsName='GRS2'
     saveFreqTable(grsName,popWanted)
 
 

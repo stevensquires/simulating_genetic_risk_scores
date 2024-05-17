@@ -3,7 +3,7 @@ import os
 from fnmatch import fnmatch
 
 def basePath():
-    return '/slade/home/ss1453/Projects/Other/BackgroundT1DGRS/'
+    return ''
 def path0(grsName,popWanted):
     return basePath()+'Data/LDlinkData/'+grsName+'/'+popWanted+'/Raw/'
 def path1():
@@ -24,7 +24,7 @@ def saveTableOrCorrelations(grsName,popWanted,minCorr):
     for chrName in listNames:
         file0=pd.read_csv(path0(grsName,popWanted)+chrName+'Correlations.txt',sep='\t',index_col=0)
         snpNames=list(file0.index)
-        if len(snpNames)>1:
+        if len(snpNames)>1: 
             values=file0.values
             for i in range(values.shape[0]-1):
                 for j in range(i+1,values.shape[0]):
@@ -35,13 +35,14 @@ def saveTableOrCorrelations(grsName,popWanted,minCorr):
     tableCorrelations.to_csv(pathOut(grsName,popWanted)+'tabCorrelations'+grsName+popWanted+'.csv')
     return tableCorrelations
 
-popsWanted=['AFR','SAS','AMR','EAS']
+grsName,minCorr='GRS2',0.05 ### alter as desired. 
+
+##### examples of running for the 1000G superpopulations and populations
+popsWanted=['EUR']#,'AFR','SAS','AMR','EAS']
 for popWanted in popsWanted:
-    grsName,minCorr='GRS2',0.05
     tableCorrelations=saveTableOrCorrelations(grsName,popWanted,minCorr)
 listPops=pd.read_csv(path1()+'listPopulations.csv')['Population'].tolist()
 for popWanted in listPops:
-    grsName,minCorr='GRS2',0.05
     tableCorrelations=saveTableOrCorrelations(grsName,popWanted,minCorr)
 
 

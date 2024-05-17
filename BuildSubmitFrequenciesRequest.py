@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 def basePath():
     return ''
 def path0():
@@ -9,9 +10,8 @@ def path2():
     return basePath()+'Data/OtherData/'
 def path3():
     return basePath()+'Code/SimGRS/CollectFreqsAndCorrs/SubmitRequests/'
-
-def pathOut(pop):
-    return basePath()+'Data/LDlinkData/GRS2/'+pop+'/Raw/'
+def pathOut(pop,grsName):
+    return basePath()+'Data/LDlinkData/'+grsName+'/'+pop+'/Raw/'
 def returnChrDict(grsFile):
     dict1={}
     for i,row in grsFile.iterrows():
@@ -39,17 +39,18 @@ def middle(listSNPs):
         for name in listSNPs:
             str1=str1+'%0A'+name
     return str1
-def end(popWanted):
-    return '&pop='+popWanted+'&r2_d=r2&window=500000&genome_build=grch37&token=b143e06c160a\' > \''
-def buildRequest(list1,chrSNPDict):
+def end(popWanted,token):
+    return '&pop='+popWanted+'&r2_d=r2&window=500000&genome_build=grch37&token='+token+'\' > \''
+def buildRequest(list1,chrSNPDict,grsName,token):
     for popWanted in list1:
-        with open('SubmitRequests/submitFrequencyRequest'+grsName+popWanted+'.sh', 'w') as f:
+        with open(path0()+'SubmitRequests/submitFrequencyRequest'+grsName+popWanted+'.sh', 'w') as f:
             f.write('#!/bin/bash\n')
             for chrNum,listSNPs in chrSNPDict.items():
-                sentence=start()+middle(listSNPs)+end(popWanted)+pathOut(popWanted)+'chr'+str(chrNum)+'Frequencies.txt\'\n'
+                sentence=start()+middle(listSNPs)+end(popWanted,token)+pathOut(popWanted,grsName)+'chr'+str(chrNum)+'Frequencies.txt\'\n'
                 f.write(sentence)
 
-
+if not os.path.exists(path0()+'SubmitRequests'):
+    os.mkdir(path0()+'SubmitRequests')
 
 nameGRS='grsScores.xlsx'
 grsFile=pd.read_excel(path0()+nameGRS)
@@ -58,19 +59,11 @@ chrSNPDict=returnChrDict(grsFile)
 grsName='GRS2'
 listSuperPops=['AFR','SAS','AMR','EAS','EUR'] ## 
 listPops=pd.read_csv(path1()+'listPopulations.csv')['Population'].tolist()
-buildRequest(listSuperPops,chrSNPDict)
-buildRequest(listPops,chrSNPDict)
 
-#### if below is run then can run this all with one script
+token='b143e06c160a'
 
-with open('SubmitRequests/submitRequestAllPops.sh', 'w') as f:
-    f.write('#!/bin/bash\n')
-    for popWanted in listPops:
-        sentence='bash '+path3()+'submitFrequencyRequestGRS2'+popWanted+'.sh\'\n'
-        f.write(sentence)
-        sentence='bash '+path3()+'submitCorrelationRequestGRS2'+popWanted+'.sh\'\n'
-        f.write(sentence)
-
+buildRequest(listSuperPops,chrSNPDict,grsName,token)
+buildRequest(listPops,chrSNPDict,grsName,token)
 
 
 
