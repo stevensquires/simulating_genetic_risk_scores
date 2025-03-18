@@ -1,2 +1,2 @@
-The approach was primarily designed for generating a GRS from modest numbers of SNPs, the types of GRS that are appropriate for diseases such as type 1 diabetes or Celiac disease.
-For th
+The approach was primarily designed for generating a GRS from modest numbers of SNPs, the types of GRS that are appropriate for diseases such as type 1 diabetes or Celiac disease, this involves up to a few hundred SNPs. However, the approach can work for more data but becomes slower and can requrie some hyperparameter tuning particularly of the level of acceptable tolerance.
+
