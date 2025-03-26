@@ -1,2 +1,3 @@
-The approach was primarily designed for generating a GRS from modest numbers of SNPs, the types of GRS that are appropriate for diseases such as type 1 diabetes or Celiac disease, this involves up to a few hundred SNPs. However, the approach can work for more data but becomes slower and can requrie some hyperparameter tuning particularly of the level of acceptable tolerance.
+The approach was primarily designed for generating a GRS from modest numbers of SNPs, the types of GRS that are appropriate for diseases such as type 1 diabetes or Celiac disease, this involves up to a few hundred SNPs. However, the approach can work for more data but becomes slower and can require some hyperparameter tuning particularly of the level of acceptable tolerance.
 
+An example of this is shown in this folder of the time taken to generate the SNP array with an increasing number of SNPs and the consequential increasing number of correlations between SNPs.
