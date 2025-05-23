@@ -1,33 +1,10 @@
-The code provided here enables the entire pipeline from collection of frequencies and correlations from LDlink or via the genomic data to the generation of the GRS. 
+This repository contains the code necessary to calculate genetic risk scores (GRSs) from summary statistics from the paper: "Calculating genetic risk scores directly from summary statistics with an application to type 1 diabetes" by Steven Squires, Michael N. Weedon and Richard A. Oram.
 
-For the 1000G data the code requires a txt file specifying the sample names and populations which can be downloaded from https://www.internationalgenome.org/data-portal/sample (true as of 25/04/2024, website and links may change with time).
+Examples of running the code for two GRSs for type 1 diabetes and type 2 diabetes are in folders ExampleT1DGRS and ExampleT2DGRS respectively. These start from summary statistics (frequencies and correlations) stored in .csv files. Each folder contains a readme file with notes on how to run the code. The ExampleT1DGRS, which is the GRS demonstrated in the paper, runs a GRS which includes interaction terms in additional to the standard linear terms and can be adapted to any similar GRS while the ExampleT2DGRS is for a standard linear GRS.
 
-For all simulation code of the T1DGRS it requires the T1DGRS score file. There are 4 necessary columns: COMPONENT, RSID, SCORE AND SCORE_ALLELE. If format being used is different from RSID (say chr:pos) then that can replace the RSID. To use a different GRS then the score file can just be directly replaced and should work appropriately. If there are no interaction terms then the COMPONENT column can be excluded.
+For further use of the code all relevant code with notes on its use is in the code "SourceCode" which should be useable for anyone familiar with Python. Code is available for the full pipeline from collection of summary statistics to calculation of the final GRS.
 
-The code is provided as a set of modules (.py scripts) which can be used individually but also call to one another. There are three main steps:
-1) Collection of input data.
-2) Generation of simulated SNP arrays.
-3) Generation of simulated GRS.
-
-1) Collection of input data.
-We provide two ways of collecting the input data required:
-a) Via application to LDlink (link works as of 15/04/2024 https://ldlink.nih.gov/?tab=home)
-b) Via use of genotype array, which requires the python package pandas_plink (https://pandas-plink.readthedocs.io/en/latest/) to be installed.
-1)a) Application to LDlink:
-   - If necessary a module allows for automated building of directories and collection of all 26 1000G population names: "BuildDirectoriesAndCollectNames.py"
-   - two python modules are "BuildSubmitCorrelationRequest.py" and "BuildSubmitFrequnciesRequest.py" which generate a set of requests for which populations or super-populations are desired and which SNPs are wanted. 
-   - two python modules are can then be run to convert the returned data from ldlink into csv tables: "SaveFreqsAsTable.py" and "SaveCorrelationsAsTable.py"
-
-1)b) Use of genotyped array
-   - This assumes that the genotyped array is stored as a PLINK bed/bim/fam format.
-   - This takes correlations (as Pearson correlations) that are larger than some chosen value - needs to be selected.
-   - run "SaveFreqsAndCorrsFromPlink.py" and it will save csv files in the same format as the ldlink produced csv tables.
-
-2) Generation of simulated SNP arrays
-   - The frequencies and correlations are saved in csv format. If there are any SNPs which deviate from HWE then they need to be specified in a dict (examples given in code). If no
-   - Either "GenSimArrayCorrelations.py" or "GenSimArrayNoCorrelations.py" should be run. Both call to "SimulationAlgorithm.py". 
-
-3) Generation of T1DGRS
-   - Run "GenerateGRS2.py" with whatever changes necessary to specify the correct simulated SNP arrays (or a real array in csv format).
+A whole-pipeline example is given in FullPipelineExampleT2DGRS with step-by-step instructions on how to calculate a T2DGRS but requires the request of data from ldlink where correlations and frequencies can be collected.
+ SNP arrays (or a real array in csv format).
    - If an alternative to the T1DGRS demonstrated here is desired just need to change the GRS score file. If no interaction terms are required then specify that as an option.
 
