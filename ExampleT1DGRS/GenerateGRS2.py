@@ -39,15 +39,15 @@ def returnDQscores(tableSNPs2,scoresFile,args):
         iter0=0
         for snpName,scoreRow in scoresFile.iterrows():
             val=arrSNPs[i,iter0]
-            dqName=scoreRow['COMPONENT'].split('-')[1]
-            if val==1:
-                listTemp.append(dqName)
-            elif val==2:
-                listTemp.append(dqName)
-                listTemp.append(dqName)
-            iter0+=1
-            if iter0==14:
-                break
+            dq=scoreRow['COMPONENT']
+            if 'DQ' in dq:
+                dqName=scoreRow['COMPONENT'].split('-')[1]
+                if val==1:
+                    listTemp.append(dqName)
+                elif val==2:
+                    listTemp.append(dqName)
+                    listTemp.append(dqName)
+
         listDQ.append(listTemp)
         temp2 = [val1 for x in rank1 for val1 in listTemp if val1 == x]
         listDQsorted.append(temp2)
