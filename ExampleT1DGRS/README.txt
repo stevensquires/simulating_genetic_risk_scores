@@ -12,6 +12,8 @@ To alter the arguments, for example to change the output path:
 
 python return_GRS2_from_summary_stats -p1 'desired_output_path'
 
+To alter to run this T1DGRS
+
 If you want to alter code to run a linear GRS with no interaction terms use code in ExampleT2DGRS folder.
 
 To alter this code to work for a different GRS with pairwise interaction terms you need to change: 
