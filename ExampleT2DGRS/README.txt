@@ -22,4 +22,4 @@ SNPsOutOfHWE.txt: this needs to be saved as comma separated txt file with the fo
 
 
 
-To alter this code to work for a different GRS
+To alter this code to work for a different GRS just change the SNP names, effect allele and beta in the grsScores.xlsx along withe the tabFrequencies.csv, tabCorrelations.csv and SNPsOutOfHWE.txt as described above.
