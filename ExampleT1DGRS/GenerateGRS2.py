@@ -34,6 +34,7 @@ def returnDQscores(tableSNPs2,scoresFile,args):
     rank1=list(ranking['DQ'])
     listDQ,listDQsorted,dqScores=[],[],[]
     arrSNPs=tableSNPs2.values
+    
     for i in range(arrSNPs.shape[0]):
         listTemp=[]
         iter0=0
@@ -47,6 +48,7 @@ def returnDQscores(tableSNPs2,scoresFile,args):
                 elif val==2:
                     listTemp.append(dqName)
                     listTemp.append(dqName)
+            iter0+=1
 
         listDQ.append(listTemp)
         temp2 = [val1 for x in rank1 for val1 in listTemp if val1 == x]
