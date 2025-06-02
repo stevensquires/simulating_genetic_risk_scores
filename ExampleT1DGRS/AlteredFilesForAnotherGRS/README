@@ -1,1 +1,5 @@
+This folder contains an example of new files required to alter the code to run on an alternative GRS with interaction terms. 
 
+The score file (grsScores.csv) has been altered for a different group of SNPs with different scores. The only interaction terms now are the HLADQ-DR4 and HLADQ-DR3 components.
+
+The interaction file (interaction_scores.txt) contains three potential interactions between the DR4 and DR3. Additionally the ranking file has been updated to include the new ranks of the DR3 and DR4.
