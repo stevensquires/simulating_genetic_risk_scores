@@ -25,4 +25,5 @@ SNPsOutOfHWE.txt: this needs to be saved as comma separated txt file with the fo
 If you want to alter code to run a linear GRS with no interaction terms use code in ExampleT2DGRS folder.
 
 To alter this code to work for a different GRS with pairwise interaction terms you need to change: 
-- grsScores.csv: replace the RSIDs, the SNP weight (SCORE), the effect allele (SCORE_ALLELE) and A1/A2 (with a homozygous A1 having a SNP value of 0 and a homozygous A2 having a SNP value of 2). The interaction term is defined by the COMPONENT column and needs to be linked with interaction_scores.txt and rankingFile.txt
+- grsScores.csv: replace the RSIDs, the SNP weight (SCORE), the effect allele (SCORE_ALLELE) and A1/A2 (with a homozygous A1 having a SNP value of 0 and a homozygous A2 having a SNP value of 2). The interaction term is defined by the COMPONENT column and needs to be linked with interaction_scores.txt and rankingFile.txt.
+- An example of an altered GRS is shown with changed grsScores.csv, interaction_scores.txt and rankingFile.txt is shown in folder AlteredFileForAnotherGRS/
