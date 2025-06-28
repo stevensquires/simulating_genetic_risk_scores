@@ -1,9 +1,15 @@
 import numpy as np
 from scipy.stats import pearsonr
 def returnSNPvals(size1,freq):
-    scoresA1=np.random.choice([0,1],size=size1,p=[1-freq,freq])
-    scoresA2=np.random.choice([0,1],size=size1,p=[1-freq,freq])
-    scoresA=scoresA1+scoresA2
+    num0=int(size1*((1-freq)**2))
+    num2=int(size1*((freq)**2))
+    num1=size1-num2-num0
+    scores0=np.zeros((num0),int)
+    scores1=np.ones((num1),int)
+    scores2=2*np.ones((num2),int)
+    scoresA=np.concatenate((scores0,scores1,scores2))
+    perm=np.random.permutation(size1)
+    scoresA=scoresA[perm]
     return scoresA
 def returnSNPvalsIfDeviate(size1,fracs):
     num0s,num1s=int(round((size1*fracs[0]))),int(round((size1*fracs[1])))
